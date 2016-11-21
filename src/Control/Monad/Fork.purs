@@ -1,19 +1,7 @@
-module Control.Monad.Fork where
+module Control.Monad.Fork
+  ( module Control.Monad.Fork.Class
+  , module Control.Monad.Fork.Canceler
+  ) where
 
-import Prelude
-import Control.Monad.Aff as Aff
-import Control.Monad.Eff.Exception (Error)
-import Control.Monad.Reader.Trans (ReaderT(..))
-import Control.Monad.Trans.Class (lift)
-
-class Monad m ⇐ MonadFork e m | m → e where
-  fork ∷ ∀ a. m a → m (e → m Boolean)
-
-instance monadForkAff ∷ MonadFork Error (Aff.Aff eff) where
-  fork aff = do
-    ac ← Aff.forkAff aff
-    pure \reason → Aff.cancel ac reason
-
-instance monadForkReaderT ∷ MonadFork e m ⇒ MonadFork e (ReaderT r m) where
-  fork (ReaderT ma) =
-    ReaderT \r → map lift <$> fork (ma r)
+import Control.Monad.Fork.Class (class MonadFork, fork)
+import Control.Monad.Fork.Canceler (Canceler(..), cancel)
