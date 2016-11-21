@@ -1,7 +1,7 @@
 {
   "name": "purescript-fork",
   "homepage": "https://github.com/slamdata/purescript-fork",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/slamdata/purescript-fork.git"
