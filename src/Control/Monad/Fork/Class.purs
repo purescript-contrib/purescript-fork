@@ -27,9 +27,7 @@ class Monad m ⇐ MonadFork e m | m → e where
   fork ∷ ∀ a. m a → m (e → m Boolean)
 
 instance monadForkAff ∷ MonadFork Error (Aff.Aff eff) where
-  fork aff = do
-    ac ← Aff.forkAff aff
-    pure \reason → Aff.cancel ac reason
+  fork = map Aff.cancel <<< Aff.forkAff
 
 instance monadForkReaderT ∷ MonadFork e m ⇒ MonadFork e (ReaderT r m) where
   fork (ReaderT ma) =
