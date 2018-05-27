@@ -18,7 +18,7 @@ module Control.Monad.Fork.Class where
 
 import Prelude hiding (join)
 
-import Control.Monad.Aff as Aff
+import Effect.Aff as Aff
 import Control.Monad.Error.Class (class MonadThrow, class MonadError)
 import Control.Monad.Reader.Trans (ReaderT(..), runReaderT)
 import Control.Monad.Trans.Class (lift)
@@ -45,7 +45,7 @@ class (Monad m, Functor f) ⇐ MonadFork f m | m → f where
   fork ∷ ∀ a. m a → m (f a)
   join ∷ ∀ a. f a → m a
 
-instance monadForkAff ∷ MonadFork (Aff.Fiber eff) (Aff.Aff eff) where
+instance monadForkAff ∷ MonadFork Aff.Fiber Aff.Aff where
   suspend = Aff.suspendAff
   fork = Aff.forkAff
   join = Aff.joinFiber
@@ -69,7 +69,7 @@ instance monadForkReaderT ∷ MonadFork f m ⇒ MonadFork f (ReaderT r m) where
 class (MonadFork f m, MonadThrow e m) ⇐  MonadKill e f m | m → e f where
   kill ∷ ∀ a. e → f a → m Unit
 
-instance monadKillAff ∷ MonadKill Aff.Error (Aff.Fiber eff) (Aff.Aff eff) where
+instance monadKillAff ∷ MonadKill Aff.Error Aff.Fiber Aff.Aff where
   kill = Aff.killFiber
 
 instance monadKillReaderT ∷ MonadKill e f m ⇒ MonadKill e f (ReaderT r m) where
@@ -101,7 +101,7 @@ class (MonadKill e f m, MonadError e m) ⇐ MonadBracket e f m | m → e f where
   uninterruptible ∷ ∀ a. m a → m a
   never ∷ ∀ a. m a
 
-instance monadBracketAff ∷ MonadBracket Aff.Error (Aff.Fiber eff) (Aff.Aff eff) where
+instance monadBracketAff ∷ MonadBracket Aff.Error Aff.Fiber Aff.Aff where
   bracket acquire release run =
     Aff.generalBracket acquire
       { completed: release <<< Completed
