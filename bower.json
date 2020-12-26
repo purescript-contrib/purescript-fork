@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/slamdata/purescript-fork.git"
+    "url": "https://github.com/slamdata/purescript-fork.git"
   },
   "ignore": [
     "**/.*",
@@ -15,6 +15,6 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-aff": "^5.0.0"
+    "purescript-aff": "main"
   }
 }
