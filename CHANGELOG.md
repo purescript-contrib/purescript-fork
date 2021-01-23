@@ -5,12 +5,15 @@ Notable changes to this project are documented in this file. The format is based
 ## [Unreleased]
 
 Breaking changes (😱!!!):
+- Added support for PureScript 0.14 and dropped support for all previous versions (#13)
 
 New features:
 
 Bugfixes:
 
 Other improvements:
+- Changed default branch to `main` from `master`
+- Updated to comply with Contributors library guidelines by adding new issue and pull request templates, updating documentation, and migrating to Spago for local development and CI (#11)
 
 ## [v4.0.0](https://github.com/purescript-contrib/purescript-fork/releases/tag/v4.0.0) - 2018-05-27
 
