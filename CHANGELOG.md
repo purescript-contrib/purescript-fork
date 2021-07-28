@@ -11,6 +11,7 @@ New features:
 Bugfixes:
 
 Other improvements:
+- Ensure all imported packages are in the spago.dhall file (#17 by @artemisSystem)
 
 ## [v5.0.0](https://github.com/purescript-contrib/purescript-fork/releases/tag/v5.0.0) - 2021-02-26
 
