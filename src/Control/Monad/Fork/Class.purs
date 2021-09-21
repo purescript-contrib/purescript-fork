@@ -1,24 +1,8 @@
-{-
-Copyright 2018 SlamData, Inc.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
--}
-
 module Control.Monad.Fork.Class where
 
 import Prelude hiding (join)
 
-import Control.Monad.Aff as Aff
+import Effect.Aff as Aff
 import Control.Monad.Error.Class (class MonadThrow, class MonadError)
 import Control.Monad.Reader.Trans (ReaderT(..), runReaderT)
 import Control.Monad.Trans.Class (lift)
@@ -45,7 +29,7 @@ class (Monad m, Functor f) ⇐ MonadFork f m | m → f where
   fork ∷ ∀ a. m a → m (f a)
   join ∷ ∀ a. f a → m a
 
-instance monadForkAff ∷ MonadFork (Aff.Fiber eff) (Aff.Aff eff) where
+instance monadForkAff ∷ MonadFork Aff.Fiber Aff.Aff where
   suspend = Aff.suspendAff
   fork = Aff.forkAff
   join = Aff.joinFiber
@@ -69,7 +53,7 @@ instance monadForkReaderT ∷ MonadFork f m ⇒ MonadFork f (ReaderT r m) where
 class (MonadFork f m, MonadThrow e m) ⇐  MonadKill e f m | m → e f where
   kill ∷ ∀ a. e → f a → m Unit
 
-instance monadKillAff ∷ MonadKill Aff.Error (Aff.Fiber eff) (Aff.Aff eff) where
+instance monadKillAff ∷ MonadKill Aff.Error Aff.Fiber Aff.Aff where
   kill = Aff.killFiber
 
 instance monadKillReaderT ∷ MonadKill e f m ⇒ MonadKill e f (ReaderT r m) where
@@ -101,7 +85,7 @@ class (MonadKill e f m, MonadError e m) ⇐ MonadBracket e f m | m → e f where
   uninterruptible ∷ ∀ a. m a → m a
   never ∷ ∀ a. m a
 
-instance monadBracketAff ∷ MonadBracket Aff.Error (Aff.Fiber eff) (Aff.Aff eff) where
+instance monadBracketAff ∷ MonadBracket Aff.Error Aff.Fiber Aff.Aff where
   bracket acquire release run =
     Aff.generalBracket acquire
       { completed: release <<< Completed
