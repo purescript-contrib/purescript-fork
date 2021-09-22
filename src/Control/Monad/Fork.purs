@@ -15,6 +15,6 @@ cancelWith cancel a =
     (\bc _ → case bc of
       Killed e → cancel e
       Completed _ → pure unit
-      Failed e → pure unit)
+      Failed _ → pure unit)
     (const a)
 
