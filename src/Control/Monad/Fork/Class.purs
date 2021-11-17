@@ -24,17 +24,17 @@ import Control.Monad.Trans.Class (lift)
 -- | -- Join is idempotent
 -- | join t *> join t = join t
 -- | ```
-class (Monad m, Functor f) ⇐ MonadFork f m | m → f where
-  suspend ∷ ∀ a. m a → m (f a)
-  fork ∷ ∀ a. m a → m (f a)
-  join ∷ ∀ a. f a → m a
+class (Monad m, Functor f) <= MonadFork f m | m -> f where
+  suspend :: forall a. m a -> m (f a)
+  fork :: forall a. m a -> m (f a)
+  join :: forall a. f a -> m a
 
-instance monadForkAff ∷ MonadFork Aff.Fiber Aff.Aff where
+instance monadForkAff :: MonadFork Aff.Fiber Aff.Aff where
   suspend = Aff.suspendAff
   fork = Aff.forkAff
   join = Aff.joinFiber
 
-instance monadForkReaderT ∷ MonadFork f m ⇒ MonadFork f (ReaderT r m) where
+instance monadForkReaderT :: MonadFork f m => MonadFork f (ReaderT r m) where
   suspend (ReaderT ma) = ReaderT (suspend <<< ma)
   fork (ReaderT ma) = ReaderT (fork <<< ma)
   join = lift <<< join
@@ -50,13 +50,13 @@ instance monadForkReaderT ∷ MonadFork f m ⇒ MonadFork f (ReaderT r m) where
 -- | -- Suspend/kill is unit
 -- | suspend a >>= kill e = pure unit
 -- | ```
-class (MonadFork f m, MonadThrow e m) ⇐  MonadKill e f m | m → e f where
-  kill ∷ ∀ a. e → f a → m Unit
+class (MonadFork f m, MonadThrow e m) <= MonadKill e f m | m -> e f where
+  kill :: forall a. e -> f a -> m Unit
 
-instance monadKillAff ∷ MonadKill Aff.Error Aff.Fiber Aff.Aff where
+instance monadKillAff :: MonadKill Aff.Error Aff.Fiber Aff.Aff where
   kill = Aff.killFiber
 
-instance monadKillReaderT ∷ MonadKill e f m ⇒ MonadKill e f (ReaderT r m) where
+instance monadKillReaderT :: MonadKill e f m => MonadKill e f (ReaderT r m) where
   kill e = lift <<< kill e
 
 data BracketCondition e a
@@ -80,12 +80,12 @@ data BracketCondition e a
 -- | fork (bracket a k \_ -> never) >>= \f -> kill e f *> void (try (join f))
 -- |   = uninterruptible (a >>= k (Killed e))
 -- | ```
-class (MonadKill e f m, MonadError e m) ⇐ MonadBracket e f m | m → e f where
-  bracket ∷ ∀ r a. m r → (BracketCondition e a → r → m Unit) → (r → m a) → m a
-  uninterruptible ∷ ∀ a. m a → m a
-  never ∷ ∀ a. m a
+class (MonadKill e f m, MonadError e m) <= MonadBracket e f m | m -> e f where
+  bracket :: forall r a. m r -> (BracketCondition e a -> r -> m Unit) -> (r -> m a) -> m a
+  uninterruptible :: forall a. m a -> m a
+  never :: forall a. m a
 
-instance monadBracketAff ∷ MonadBracket Aff.Error Aff.Fiber Aff.Aff where
+instance monadBracketAff :: MonadBracket Aff.Error Aff.Fiber Aff.Aff where
   bracket acquire release run =
     Aff.generalBracket acquire
       { completed: release <<< Completed
@@ -96,11 +96,11 @@ instance monadBracketAff ∷ MonadBracket Aff.Error Aff.Fiber Aff.Aff where
   uninterruptible = Aff.invincible
   never = Aff.never
 
-instance monadBracketReaderT ∷ MonadBracket e f m ⇒ MonadBracket e f (ReaderT r m) where
-  bracket (ReaderT acquire) release run = ReaderT \r →
+instance monadBracketReaderT :: MonadBracket e f m => MonadBracket e f (ReaderT r m) where
+  bracket (ReaderT acquire) release run = ReaderT \r ->
     bracket (acquire r)
-      (\c a → runReaderT (release c a) r)
-      (\a → runReaderT (run a) r)
+      (\c a -> runReaderT (release c a) r)
+      (\a -> runReaderT (run a) r)
   uninterruptible k = ReaderT \r ->
     uninterruptible (runReaderT k r)
   never = lift never
