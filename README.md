@@ -4,7 +4,6 @@
 [![Release](https://img.shields.io/github/release/purescript-contrib/purescript-fork.svg)](https://github.com/purescript-contrib/purescript-fork/releases)
 [![Pursuit](https://pursuit.purescript.org/packages/purescript-fork/badge)](https://pursuit.purescript.org/packages/purescript-fork)
 [![Maintainer: garyb](https://img.shields.io/badge/maintainer-garyb-teal.svg)](https://github.com/garyb)
-[![Maintainer: thomashoneyman](https://img.shields.io/badge/maintainer-thomashoneyman-teal.svg)](https://github.com/thomashoneyman)
 
 Monads which support a forking operation.
 
