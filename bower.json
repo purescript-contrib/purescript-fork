@@ -15,10 +15,10 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-aff": "main"
+    "purescript-aff": "^7.0.0"
   },
   "devDependencies": {
-    "purescript-console": "master",
-    "purescript-effect": "master"
+    "purescript-console": "^6.0.0",
+    "purescript-effect": "^4.0.0"
   }
 }
