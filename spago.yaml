@@ -1,0 +1,18 @@
+package:
+  name: fork
+  publish:
+    license: Apache-2.0
+    version: 7.0.0
+    location:
+      githubOwner: purescript-contrib
+      githubRepo: purescript-fork
+  dependencies:
+    - aff: ">=8.0.0 <9.0.0"
+    - prelude: ">=6.0.1 <7.0.0"
+    - transformers: ">=6.1.0 <7.0.0"
+  test:
+    main: Test.Main
+    dependencies:
+      - console
+      - effect
+workspace: {}
