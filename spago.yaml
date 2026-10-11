@@ -1,0 +1,24 @@
+package:
+  name: fork
+  description: Monads which support a forking operation.
+  publish:
+    version: 6.0.1
+    license: Apache-2.0
+    location:
+      githubOwner: purescript-contrib
+      githubRepo: purescript-fork
+  build:
+    strict: true
+  dependencies:
+    - aff: ">=7.0.0 <9.0.0"
+    - prelude: ">=6.0.0 <7.0.0"
+    - transformers: ">=6.0.0 <7.0.0"
+  test:
+    main: Test.Main
+    dependencies:
+      - console
+      - effect
+
+workspace:
+  packageSet:
+    registry: 81.4.0
